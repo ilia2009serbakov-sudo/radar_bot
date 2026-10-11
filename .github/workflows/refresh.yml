@@ -1,0 +1,19 @@
+name: Radar refresh
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh Radar
+        env:
+          RADAR_URL: ${{ secrets.RADAR_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail --silent --show-error \
+            -X POST "$RADAR_URL/internal/refresh" \
+            -H "X-Cron-Secret: $CRON_SECRET"
